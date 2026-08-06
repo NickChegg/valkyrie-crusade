@@ -1,9 +1,11 @@
-import { extension_settings, getContext } from "../../../extensions.js";
-import { saveSettingsDebounced } from "../../../../script.js";
-import { sendTextareaMessage } from "../../../../send_textarea.js";
+import { getContext } from "../../../extensions.js";
+import { saveSettingsDebounced } from "../../../script.js";
 
-const extensionName = "valkyrie-crusade";
-const gamePath = `/ThirdParty/Extensions/${extensionName}/game/index.html`;
+// Ensure this exactly matches the name of your folder in third-party/extensions/
+const extensionName = "Valkyrie-Crusade"; 
+
+// Using lowercase 'third-party/extensions' as that is how SillyTavern's web server routes it
+const gamePath = `/third-party/extensions/${extensionName}/game/index.html`;
 
 let gameIframe = null;
 let gameContainer = null;
@@ -57,10 +59,14 @@ jQuery(async () => {
         // When Unity finishes loading, push the current chat and save data into it
         if (data.type === 'UNITY_READY') {
             const context = getContext();
+            const savedState = (context.chatMetadata && context.chatMetadata.valkyrieSaveState) 
+                                ? context.chatMetadata.valkyrieSaveState 
+                                : null;
+
             gameIframe.contentWindow.postMessage({
                 type: 'ST_EVENT',
                 event: 'CHAT_OPENED',
-                gameState: context.chatMetadata?.valkyrieSaveState || {},
+                gameState: savedState,
                 chat: context.chat || []
             }, '*');
         }
@@ -70,15 +76,23 @@ jQuery(async () => {
             const context = getContext();
             if (!context.chatMetadata) context.chatMetadata = {};
             context.chatMetadata.valkyrieSaveState = JSON.parse(data.state);
-            saveSettingsDebounced();
+            
+            saveSettingsDebounced(); // Trigger ST to save to disk
         }
 
         // Handle LLM Messages coming from Unity's .jslib
         if (data.type === 'SEND_MESSAGE') {
             const textarea = document.getElementById('send_textarea');
-            if (textarea) {
+            const sendBtn = document.getElementById('send_but');
+            
+            if (textarea && sendBtn) {
                 textarea.value = data.message;
-                sendTextareaMessage(); // Triggers ST to send the message to the AI
+                
+                // Tell SillyTavern the text changed so it registers the input
+                textarea.dispatchEvent(new Event('input', { bubbles: true })); 
+                
+                // Click the send button!
+                sendBtn.click(); 
             }
         }
     });
