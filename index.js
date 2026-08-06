@@ -2,14 +2,14 @@ import { getContext } from "../../../extensions.js";
 import { eventSource } from "../../../../script.js";
 
 let gameWindow = null;
-let savedFolders = JSON.parse(localStorage.getItem('gameEngineFolders')) || ['dungeon'];
+let savedFolders = JSON.parse(localStorage.getItem('valkyrieCrusadeFolders')) || ['dungeon'];
 
 function createUI() {
     const html = `
-        <div class="extension-settings" id="game-engine-settings">
+        <div class="extension-settings" id="valkyrie-crusade-settings">
             <div class="inline-drawer">
                 <div class="inline-drawer-toggle inline-drawer-header">
-                    <b>🎮 Game Engine</b>
+                    <b>🎮 Valkyrie Crusade</b>
                     <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
                 </div>
                 <div class="inline-drawer-content" style="padding: 10px;">
@@ -41,7 +41,7 @@ function createUI() {
             gameWindow.location.href = gameUrl;
             gameWindow.focus();
         } else {
-            gameWindow = window.open(gameUrl, "GameEngine", "width=1000,height=700");
+            gameWindow = window.open(gameUrl, "ValkyrieCrusade", "width=1000,height=700");
         }
     });
 
@@ -49,7 +49,7 @@ function createUI() {
         const folder = $("#game-dropdown-selector").val();
         if (!folder) return;
         savedFolders = savedFolders.filter(f => f !== folder);
-        localStorage.setItem('gameEngineFolders', JSON.stringify(savedFolders));
+        localStorage.setItem('valkyrieCrusadeFolders', JSON.stringify(savedFolders));
         updateDropdown();
         toastr.success(`Removed '${folder}'`);
     });
@@ -68,7 +68,7 @@ function createUI() {
         }
         
         savedFolders.push(folder);
-        localStorage.setItem('gameEngineFolders', JSON.stringify(savedFolders));
+        localStorage.setItem('valkyrieCrusadeFolders', JSON.stringify(savedFolders));
         $("#game-new-input").val("");
         updateDropdown();
         toastr.success(`Added '${folder}'`);
@@ -143,19 +143,19 @@ window.addEventListener("message", async (event) => {
                 }, "*");
             }
         } catch (error) {
-            console.error("Game Engine: Background LLM Error:", error);
+            console.error("Valkyrie Crusade: Background LLM Error:", error);
         }
     }
     // ---------- GAME STATE SAVING LOGIC ----------
     else if (event.data.type === "SAVE_GAME_STATE") {
         if (context.chatMetadata) {
-            context.chatMetadata.gameEngineState = event.data.state;
-            console.log("Game Engine: State securely saved to chat metadata.");
+            context.chatMetadata.valkyrieCrusadeState = event.data.state;
+            console.log("Valkyrie Crusade: State securely saved to chat metadata.");
         }
     }
     // ---------- CAPABILITY 3: DYNAMIC SYSTEM PROMPT / AUTHOR'S NOTE ----------
     else if (event.data.type === "INJECT_SYSTEM_PROMPT") {
-        const promptId = event.data.id || "game_engine_sys_default";
+        const promptId = event.data.id || "valkyrie_crusade_sys_default";
         
         if (event.data.active === false || !event.data.text) {
             // Remove prompt (Key, Text, Position, Depth, ScanForWI, Role)
@@ -173,7 +173,7 @@ window.addEventListener("message", async (event) => {
     }
     // ---------- CAPABILITY 2: DYNAMIC LOREBOOK ACTIVATION ----------
     else if (event.data.type === "ACTIVATE_LOREBOOK_ENTRY") {
-        const loreId = event.data.id || "game_engine_lore_default";
+        const loreId = event.data.id || "valkyrie_crusade_lore_default";
         
         if (event.data.active === false) {
             context.setExtensionPrompt(loreId, "", 0, 0, false, 0);
@@ -191,7 +191,7 @@ window.addEventListener("message", async (event) => {
             if (entry) {
                 loreText = entry.content;
             } else {
-                console.warn(`Game Engine: Could not find ST Lorebook entry for keyword '${event.data.keyword}'`);
+                console.warn(`Valkyrie Crusade: Could not find ST Lorebook entry for keyword '${event.data.keyword}'`);
             }
         }
 
@@ -222,7 +222,7 @@ window.addEventListener("message", async (event) => {
                     count = tokenModule.getTokenCount(event.data.text || "");
                 }
             } catch (err) {
-                console.warn("Game Engine: Could not dynamically import tokenizers, falling back to approximation", err);
+                console.warn("Valkyrie Crusade: Could not dynamically import tokenizers, falling back to approximation", err);
                 count = Math.ceil((event.data.text || "").length / 4); // Approximation fallback
             }
 
@@ -235,7 +235,7 @@ window.addEventListener("message", async (event) => {
                 }, "*");
             }
         } catch (error) {
-            console.error("Game Engine: Token Count Error:", error);
+            console.error("Valkyrie Crusade: Token Count Error:", error);
         }
     }
 });
@@ -246,7 +246,7 @@ function dispatchToGame(eventName) {
     const context = getContext();
     
     // Grab the custom state from the chat file (if it exists)
-    const savedState = context.chatMetadata ? context.chatMetadata.gameEngineState : null;
+    const savedState = context.chatMetadata ? context.chatMetadata.valkyrieCrusadeState : null;
 
     gameWindow.postMessage({
         type: "ST_EVENT",
