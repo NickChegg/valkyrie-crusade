@@ -138,7 +138,7 @@
           });
           
           // Let the parent (SillyTavern) know Unity is ready to receive data
-          window.parent.postMessage({ type: 'UNITY_READY' }, '*');
+          (window.opener || window.parent).postMessage({ type: 'UNITY_READY' }, '*');
           // --- SILLYTAVERN LISTENER END ---
 
                 document.querySelector("#unity-loading-bar").style.display = "none";
