@@ -9,7 +9,8 @@ https://ko-fi.com/nickchegg
 2. Go to the Extensions menu (the Blocks icon).
 3. Click **Install Extension**.
 4. Paste this repository link: `https://github.com/NickChegg/valkyrie-crusade`
-5. Restart SillyTavern.
+5. Install for all Users
+6. Restart SillyTavern.
 
 ## How to Play
 
