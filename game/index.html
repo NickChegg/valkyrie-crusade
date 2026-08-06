@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Valkyrie Crusade</title>
+    <title>Unity Web Player | Valkyrie Crusade</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
@@ -122,9 +122,11 @@
               if (data.type === 'ST_EVENT') {
                   
                   if (data.event === 'CHAT_OPENED') {
-                      const stateStr = data.gameState ? JSON.stringify(data.gameState) : '';
+                      // 1. Send Game State (Fix: Prevents double-stringifying already saved states)
+                      const stateStr = (typeof data.gameState === 'string') ? data.gameState : (data.gameState ? JSON.stringify(data.gameState) : '');
                       unityInstance.SendMessage('SillyTavernManager', 'ReceiveGameState', stateStr);
                       
+                      // 2. Send Chat History (Wrapped in an object so Unity's JsonUtility can read it)
                       const chatPayload = data.chat ? JSON.stringify({ messages: data.chat }) : JSON.stringify({ messages: [] });
                       unityInstance.SendMessage('SillyTavernManager', 'ReceiveChatHistory', chatPayload);
                   }
@@ -134,11 +136,12 @@
                           unityInstance.SendMessage('SillyTavernManager', 'ReceiveMessageFromAI', lastMsg.mes);
                       }
                   }
+                  else if (data.event === 'BACKGROUND_RESPONSE') {
+                      const bgPayload = JSON.stringify({ taskId: data.taskId, result: data.result });
+                      unityInstance.SendMessage('SillyTavernManager', 'ReceiveBackgroundResponse', bgPayload);
+                  }
               }
           });
-          
-          // Let the parent (SillyTavern) know Unity is ready to receive data
-          (window.opener || window.parent).postMessage({ type: 'UNITY_READY' }, '*');
           // --- SILLYTAVERN LISTENER END ---
 
                 document.querySelector("#unity-loading-bar").style.display = "none";

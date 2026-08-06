@@ -1,7 +1,7 @@
 {
-    "name": "Valkyrie Crusade",
-    "description": "An interactive 2D base-building game integrated directly with AI roleplay.",
+    "display_name": "Valkyrie Crusade",
     "version": "1.0.0",
     "author": "You",
-    "js": ["index.js"]
+    "description": "Kingdom builder and companion game for SillyTavern.",
+    "js": "index.js"
 }
