@@ -1,7 +1,7 @@
 {
-    "display_name": "Valkyrie Crusade",
+    "name": "Valkyrie Crusade",
+    "description": "An interactive 2D base-building game integrated directly with AI roleplay.",
     "version": "1.0.0",
     "author": "You",
-    "description": "A custom window engine for running RPGs and Visual Novels.",
-    "js": "index.js"
+    "js": ["index.js"]
 }
