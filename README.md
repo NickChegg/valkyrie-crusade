@@ -8,11 +8,13 @@ https://ko-fi.com/nickchegg
 1. Open SillyTavern.
 2. Go to the Extensions menu (the Blocks icon).
 3. Click **Install Extension**.
-4. Paste this repository link: `https://github.com/NickChegg/Valkyrie-Crusade`
-5. Restart SillyTavern.
+4. Paste this repository link: `https://github.com/NickChegg/valkyrie-crusade`
+5. Install for all Users
+6. Restart SillyTavern.
 
 ## How to Play
 
-1. In the Extensions menu, open the **Game Engine** settings block.
-2. Type `valkyrie` into the "New game folder..." box and click **Add**.
-3. Select `valkyrie` from the dropdown and click **Open**.
+1. Download the Valkyrie Crusade Game bot card and lorebook.
+2. In the Extensions menu, open the **Valkyrie Crusade** settings block.
+3. Click **Play Game**.
+4. Report bugs back to me wherever you found this. 
