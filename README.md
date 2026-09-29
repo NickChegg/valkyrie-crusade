@@ -14,7 +14,7 @@ https://ko-fi.com/nickchegg
 
 ## How to Play
 
-1. Download the Valkyrie Crusade Game bot card and lorebook.
+1. Download the Valkyrie Crusade Game bot card and lorebook. `https://botbooru.com/character/72258`
 2. In the Extensions menu, open the **Valkyrie Crusade** settings block.
 3. Click **Play Game**.
 4. Report bugs back to me wherever you found this. 
